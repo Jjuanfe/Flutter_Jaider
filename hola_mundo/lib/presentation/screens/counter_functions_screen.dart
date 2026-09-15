@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 
-class CounterScreen extends StatefulWidget {
+class CounterFunctionScreen extends StatefulWidget {
   const new({super.key});
 
   @override
-  State<CounterScreen> createState() => _CounterScreenState();
+  State<CounterFunctionScreen> createState() => _CounterFunctionScreenState();
 }
 
-class _CounterScreenState extends State<CounterScreen> {
+class _CounterFunctionScreenState extends State<CounterFunctionScreen> {
   int clickCounter = 0;
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,21 @@ class _CounterScreenState extends State<CounterScreen> {
       //Dejando True a Material 3 cambia el diseño, también colores 
       theme: ThemeData(
         useMaterial3: false,
-        colorSchemeSeed: Colors.deepPurple 
+        colorSchemeSeed: Colors.orange 
         ),
         //DENTRO DE ESTE HOME ESTÁ EL SCAFFOLD WIDGET QUE AYUDA CON LA UBICACIÓN DEL LAS COSAS
       home: Scaffold(
         appBar: AppBar(
           title: Center(child: Text('Counter Screen')) ,
-          
+          actions: [
+          IconButton(
+            onPressed: (){
+              setState(() {
+                clickCounter = 0;
+              });
+            },
+            icon: Icon(Icons.refresh_outlined)),
+          ]
         ),
         //LA COLUMNA ES UN SOLO WIDGET SE LE PUEDE DAR ESTILO, CENTRARLA ETC, SI RECIBE UN HIJO SOLO SE DEJA CHILD SI NO, SE CAMBIA A CHILDREN
       body: Center(
@@ -42,39 +50,56 @@ class _CounterScreenState extends State<CounterScreen> {
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            FloatingActionButton(
-              onPressed:(){
-                clickCounter++;
-                setState(() {});
-              },
-              child: Icon(Icons.plus_one),
-              ),
-
-
-            FloatingActionButton(
+            CustomButton(
+              icon:Icons.plus_one,
               onPressed: (){
-                clickCounter--;
-                setState(() {});
-              },
-              child: Icon(Icons.exposure_minus_1_outlined),
+                clickCounter ++;
+                setState(() {});  
+              }
             ),
-
-            FloatingActionButton(
-              onPressed: (){
+            CustomButton(
+              icon:Icons.exposure_minus_1_outlined,
+              onPressed: () {
+                if(clickCounter == 0) return;
+                clickCounter --;
+                setState(() {});
+              },
+              ),
+            CustomButton(
+              icon: Icons.refresh_rounded,
+              onPressed: () {
                 clickCounter = 0;
                 setState(() {});
               },
-              child: Icon(Icons.exposure_zero),
-            )
-
-
+            ),
           ],
           
         ),
-
-
-
         )
     );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+
+  final IconData icon;
+  //con el ? se vuelve opcional puede o no venir
+  final VoidCallback? onPressed;
+
+  const new({
+    super.key,
+    required this.icon,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      //shape: StadiumBorder(),
+      elevation: 5,
+      enableFeedback: true,
+      onPressed: onPressed,
+      child: Icon(icon),
+      );
   }
 }
